@@ -12,10 +12,10 @@ namespace SignalR_RabbitMQ.Controllers
     public class MessageController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post(User model)
+        public IActionResult Post([FromForm] User model)
         {
-            var factory = new ConnectionFactory { HostName = "whale.rmq.cloudamqp.com" };
-            factory.Uri = new Uri("amqps://whkencda:eGKwGtVaoxyw41itUW2BuXrzDKTJU_Wr@whale.rmq.cloudamqp.com/whkencda");
+            var factory = new ConnectionFactory { HostName = "your cloudamqp Hostname" };
+            factory.Uri = new Uri("your cloudamqp URL");
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 

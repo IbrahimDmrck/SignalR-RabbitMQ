@@ -1,4 +1,5 @@
 ﻿using EmailSenderExample;
+using Microsoft.AspNetCore.SignalR.Client;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -9,8 +10,12 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var factory = new ConnectionFactory { HostName = "whale.rmq.cloudamqp.com" };
-        factory.Uri = new Uri("amqps://whkencda:eGKwGtVaoxyw41itUW2BuXrzDKTJU_Wr@whale.rmq.cloudamqp.com/whkencda");
+        HubConnection hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7036/messagehub").Build();
+        hubConnection.StartAsync().Wait();
+
+
+        var factory = new ConnectionFactory { HostName = "your cloudamqp Hostname" };
+        factory.Uri = new Uri("your cloudamqp URL");
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
 
@@ -26,16 +31,18 @@ internal class Program
                      autoAck: true,
                      consumer: consumer);
 
-        consumer.Received += (model, ea) =>
+        consumer.Received += async (model, ea) =>
         {
-            //izea nupa ntmq opdf
             //Email Gönderme İşlemi
             //ea.Body.Span
             string serializeData = Encoding.UTF8.GetString(ea.Body.Span);
             User user = JsonSerializer.Deserialize<User>(serializeData);
             EmailSender.Send(user.Email,user.Message);
             Console.WriteLine("Mail Gönderilmiştir");
+           await hubConnection.InvokeAsync("SendMessageAsync",$"{user.Email} mail adresine eposta gönderilmiştir");
+
         };
+
         Console.Read();
 
     }

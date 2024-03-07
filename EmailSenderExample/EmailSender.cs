@@ -9,7 +9,7 @@ namespace EmailSenderExample
         public static void Send(string to,string message)
         {
             MimeMessage mimeMessage = new();
-            MailboxAddress mailboxAddressFrom = new("Admin", "ibrahimdemircik1@gmail.com");
+            MailboxAddress mailboxAddressFrom = new("Admin", "sender mail addres");
             mimeMessage.From.Add(mailboxAddressFrom);
             MailboxAddress mailboxAddressTo = new("User", to);
             mimeMessage.To.Add(mailboxAddressTo);
@@ -22,7 +22,7 @@ namespace EmailSenderExample
 
             SmtpClient client = new();
             client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("ibrahimdemircik1@gmail.com", "izeanupantmqopdf");
+            client.Authenticate("your mail address", "your application password");
             client.Send(mimeMessage);
             client.Disconnect(true);
         }

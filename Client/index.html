@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignalR_RabbitMQ</title>
+    <script src="jquery.min.js"></script>
+    <script src="signalr.min.js"></script>
+    <script> 
+    $(document).ready(function () {
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7036/messagehub").build();
+            connection.start();
+
+            connection.on("receiveMessage",message=>{
+                $("div").html(message);
+                $("div").fadeIn(2000,()=>{
+                    setTimeout(()=>{
+                        $("div").fadeOut(2000);
+                    },2000)
+                });
+            });
+
+        $("button").click(function () { 
+            let email = $("#txtEmail").val();
+            let message = $("#txtMessage").val();
+            $.post("https://localhost:7036/api/message", {Email:email,Message:message},
+                ()=> {
+                    console.log("işlem başarılı");
+                }
+            );
+        });
+    });
+    </script>
+</head>
+<body>
+<div style="background-color: darkorchid;display: none;"></div>
+
+    <input type="text" name="" id="txtEmail" placeholder="Email">
+    <input type="text" name="" id="txtMessage" placeholder="Mesaj">
+    <button>Gönder</button>
+</body>
+</html>
