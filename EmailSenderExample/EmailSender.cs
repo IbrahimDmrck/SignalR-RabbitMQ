@@ -22,7 +22,7 @@ namespace EmailSenderExample
 
             SmtpClient client = new();
             client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("your mail address", "your application password");
+            client.Authenticate("your mail address", "your gmail application password");
             client.Send(mimeMessage);
             client.Disconnect(true);
         }
